@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}{{ property.title }} - ManyumbaVacant{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-7">{% if property.image1 %}<img src="{{ property.image1.url }}" class="img-fluid rounded">{% endif %}</div>
+    <div class="col-md-5"><h2>{{ property.title }}</h2><h4 class="text-primary">{{ price_display }}</h4><p><i class="bi bi-geo-alt"></i> {{ property.location_neighbourhood }} {% if property.location_landmark %}({{ property.location_landmark }}){% endif %}</p><hr>
+    <h5>Features</h5><ul>{% if property.has_tiles %}<li>Tiles</li>{% endif %}{% if property.has_water %}<li>Water</li>{% endif %}{% if property.has_internet %}<li>Internet</li>{% endif %}</ul>
+    <p>{{ property.description|linebreaks }}</p><hr>
+    {% if show_contact %}<div class="alert alert-success"><strong>{{ property.landlord.name }}</strong><br>📞 {{ landlord_phone }}</div>{% else %}<a href="?reveal=1" class="btn btn-success w-100">Show Contact Number</a>{% endif %}
+    <a href="{% url 'manyumbavacant:search' %}" class="btn btn-outline-primary w-100 mt-2">Back to Search</a></div>
+</div>
+{% endblock %}

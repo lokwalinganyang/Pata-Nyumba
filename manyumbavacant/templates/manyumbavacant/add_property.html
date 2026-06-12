@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Property Details - ManyumbaVacant{% endblock %}
+
+{% block extra_head %}
+<style>
+    .type-specific-fields {
+        display: none;
+    }
+    .type-specific-fields.active {
+        display: block;
+    }
+    .form-section {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .errorlist {
+        color: #dc3545;
+        list-style: none;
+        padding-left: 0;
+        margin-top: 5px;
+        font-size: 0.875rem;
+    }
+    .help-text {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">Add Property Details</h4>
+                <small>Tell us about your property – we'll show only relevant fields</small>
+            </div>
+            <div class="card-body">
+                <!-- Display non-field errors -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form method="post" enctype="multipart/form-data" id="propertyForm">
+                    {% csrf_token %}
+                    
+                    <!-- Property Type Selection -->
+                    <div class="mb-4 p-3 bg-light rounded">
+                        <label class="form-label fw-bold fs-5">Property Type *</label>
+                        <select name="property_type" id="propertyTypeSelect" class="form-select form-select-lg" required>
+                            <option value="">-- Select property type --</option>
+                            <option value="rent" {% if form.property_type.value == 'rent' %}selected{% endif %}>Monthly Rent (rolling contract)</option>
+                            <option value="lease" {% if form.property_type.value == 'lease' %}selected{% endif %}>Long‑term Lease (6+ months)</option>
+                            <option value="airbnb" {% if form.property_type.value == 'airbnb' %}selected{% endif %}>Short‑stay / Airbnb (nightly)</option>
+                            <option value="conference" {% if form.property_type.value == 'conference' %}selected{% endif %}>Conference Facility (hourly)</option>
+                        </select>
+                        <div class="help-text">Choose the type that best describes your property</div>
+                    </div>
+
+                    <!-- Common Fields -->
+                    <div class="form-section">
+                        <h5>Basic Information</h5>
+                        <div class="mb-3">
+                            <label class="form-label">Title *</label>
+                            {{ form.title }}
+                            {{ form.title.errors }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Description *</label>
+                            {{ form.description }}
+                            {{ form.description.errors }}
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Location / Neighbourhood</label>
+                                {{ form.location_neighbourhood }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nearby Landmark</label>
+                                {{ form.location_landmark }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rent/Lease Fields -->
+                    <div id="rentLeaseFields" class="type-specific-fields form-section">
+                        <h5>Rent / Lease Details</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">House type</label>
+                                {{ form.house_type }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Monthly Rent (KES) *</label>
+                                {{ form.monthly_rent }}
+                                {{ form.monthly_rent.errors }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Deposit (KES) – optional</label>
+                                {{ form.deposit }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    {{ form.is_furnished }} <label class="form-check-label">Furnished</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check">
+                                    {{ form.is_in_compound }} <label class="form-check-label">Part of a compound</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Compound name</label>
+                                {{ form.compound_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Total units in compound</label>
+                                {{ form.total_units_in_compound }}
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>Amenities</h6>
+                        <div class="row mb-3">
+                            <div class="col-md-3">{{ form.has_tiles }} <label class="form-check-label">Tiles</label></div>
+                            <div class="col-md-3">{{ form.has_terrazzo }} <label class="form-check-label">Terrazzo</label></div>
+                            <div class="col-md-3">{{ form.has_water }} <label class="form-check-label">Water</label></div>
+                            <div class="col-md-3">{{ form.has_hot_shower }} <label class="form-check-label">Hot shower</label></div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">{{ form.has_internet }} <label class="form-check-label">Internet</label></div>
+                            <div class="col-md-4">
+                                <label class="form-label">Parking capacity</label>
+                                {{ form.parking_capacity }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Electricity billing</label>
+                                {{ form.electricity_billing }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Water source</label>
+                                {{ form.water_source }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Water schedule</label>
+                                {{ form.water_schedule }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Extra features</label>
+                            {{ form.extra_features }}
+                        </div>
+                    </div>
+
+                    <!-- Airbnb Fields -->
+                    <div id="airbnbFields" class="type-specific-fields form-section">
+                        <h5>Airbnb / Short‑stay Details</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Nightly rate (KES) *</label>
+                                {{ form.nightly_rate }}
+                                {{ form.nightly_rate.errors }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Cleaning fee (KES)</label>
+                                {{ form.cleaning_fee }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Minimum nights</label>
+                                {{ form.min_nights }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Bedrooms</label>
+                                {{ form.bedrooms }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Beds</label>
+                                {{ form.beds }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Baths</label>
+                                {{ form.baths }}
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Max guests</label>
+                                {{ form.max_guests }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">{{ form.has_kitchen }} <label class="form-check-label">Kitchen</label></div>
+                            <div class="col-md-4">{{ form.has_tv }} <label class="form-check-label">TV</label></div>
+                            <div class="col-md-4">{{ form.has_internet }} <label class="form-check-label">WiFi</label></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Extra features</label>
+                            {{ form.extra_features }}
+                        </div>
+                    </div>
+
+                    <!-- Conference Fields -->
+                    <div id="conferenceFields" class="type-specific-fields form-section">
+                        <h5>Conference Facility Details</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Capacity range</label>
+                                {{ form.capacity_range }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Exact capacity (optional)</label>
+                                {{ form.capacity }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Hourly rate (KES) *</label>
+                                {{ form.hourly_rate }}
+                                {{ form.hourly_rate.errors }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Half‑day rate (4hrs)</label>
+                                {{ form.half_day_rate }}
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Full‑day rate (8hrs)</label>
+                                {{ form.full_day_rate }}
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">{{ form.has_projector }} <label class="form-check-label">Projector</label></div>
+                            <div class="col-md-3">{{ form.has_sound_system }} <label class="form-check-label">Sound system</label></div>
+                            <div class="col-md-3">{{ form.has_whiteboard }} <label class="form-check-label">Whiteboard</label></div>
+                            <div class="col-md-3">{{ form.catering_available }} <label class="form-check-label">Catering</label></div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Additional notes</label>
+                            {{ form.conference_notes }}
+                        </div>
+                    </div>
+
+                    <!-- Images -->
+                    <div class="form-section">
+                        <h5>Property Images</h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Image 1 (main)</label>
+                                {{ form.image1 }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Image 2</label>
+                                {{ form.image2 }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Image 3</label>
+                                {{ form.image3 }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Image 4</label>
+                                {{ form.image4 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Submit Property for Approval</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const typeSelect = document.getElementById('propertyTypeSelect');
+    const rentLeaseDiv = document.getElementById('rentLeaseFields');
+    const airbnbDiv = document.getElementById('airbnbFields');
+    const conferenceDiv = document.getElementById('conferenceFields');
+
+    function updateFields() {
+        const selected = typeSelect.value;
+        rentLeaseDiv.classList.remove('active');
+        airbnbDiv.classList.remove('active');
+        conferenceDiv.classList.remove('active');
+        if (selected === 'rent' || selected === 'lease') {
+            rentLeaseDiv.classList.add('active');
+        } else if (selected === 'airbnb') {
+            airbnbDiv.classList.add('active');
+        } else if (selected === 'conference') {
+            conferenceDiv.classList.add('active');
+        }
+    }
+    typeSelect.addEventListener('change', updateFields);
+    updateFields(); // initial state
+</script>
+{% endblock %}

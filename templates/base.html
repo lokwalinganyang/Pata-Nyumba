@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>{% block title %}ManyumbaVacant – Find Your Home in Lodwar{% endblock %}</title>
+    <!-- Bootstrap 5 CSS + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        /* ---------- CUSTOM COLOR PALETTE ---------- */
+        :root {
+            --bs-primary: #2E8B57;           /* Green primary */
+            --bs-primary-rgb: 46, 139, 87;
+            --bs-link-color: #5DADE2;         /* Blue accent for links */
+            --bs-link-hover-color: #4A9ED1;
+        }
+
+        /* Ensure navbar links are bright white and readable */
+        .navbar-dark .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 500;
+        }
+        .navbar-dark .navbar-nav .nav-link:hover {
+            color: white;
+        }
+
+        /* Override Bootstrap primary elements */
+        .navbar-dark.bg-primary,
+        .card-header.bg-primary,
+        .bg-primary {
+            background-color: #2E8B57 !important;
+        }
+
+        .btn-primary {
+            background-color: #2E8B57;
+            border-color: #2E8B57;
+        }
+        .btn-primary:hover {
+            background-color: #236B43;
+            border-color: #1E5A38;
+        }
+        .btn-accent {
+            background-color: #5DADE2;
+            border-color: #5DADE2;
+            color: white;
+        }
+        .btn-accent:hover {
+            background-color: #4A9ED1;
+            border-color: #3B8BC0;
+            color: white;
+        }
+
+        /* Links use accent blue */
+        a:not(.btn):not(.nav-link) {
+            color: #5DADE2;
+        }
+        a:not(.btn):not(.nav-link):hover {
+            color: #4A9ED1;
+        }
+
+        /* ---------- ANIMATIONS & TRANSITIONS ---------- */
+        /* Page fade‑in */
+        main {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card hover effects */
+        .card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s;
+            border: 1px solid #e9ecef;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+            border-color: #2E8B57;
+        }
+
+        /* Image zoom inside card */
+        .card-img-top {
+            transition: transform 0.3s ease;
+        }
+        .card:hover .card-img-top {
+            transform: scale(1.02);
+        }
+
+        /* Button animations */
+        .btn {
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary, .btn-accent {
+            background-size: 200% auto;
+        }
+        .btn-primary:hover, .btn-accent:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .btn-primary:active, .btn-accent:active {
+            transform: translateY(1px);
+        }
+        /* Ripple effect on click */
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+        .btn:active::after {
+            width: 120%;
+            height: 120%;
+        }
+
+        /* Input focus glow */
+        .form-control:focus, .form-select:focus {
+            border-color: #2E8B57;
+            box-shadow: 0 0 0 0.2rem rgba(46, 139, 87, 0.25);
+            outline: none;
+        }
+
+        /* Alert slide‑down */
+        .alert {
+            animation: slideDown 0.4s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sticky filter sidebar on desktop */
+        @media (min-width: 768px) {
+            .filter-sidebar {
+                position: sticky;
+                top: 20px;
+                z-index: 1;
+            }
+        }
+
+        /* Smooth filter toggle (if you use JS toggles) */
+        .property-type-filters {
+            transition: opacity 0.2s ease, visibility 0.2s;
+        }
+
+        /* Subtle body background pattern (optional, very light) */
+        body {
+            background-color: #fefefe;
+            background-image: radial-gradient(#e5e7eb 0.8px, transparent 0.8px);
+            background-size: 20px 20px;
+        }
+
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .btn, .btn-sm {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.875rem;
+            }
+            .card-img-top {
+                height: 150px;
+            }
+            h1, h2, h3 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'manyumbavacant:home' %}">ManyumbaVacant</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:home' %}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:search' %}">Search</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:browse_locations' %}">Browse by Area</a></li>
+                    
+                    {% if user.is_authenticated %}
+                        <!-- Logged in landlord -->
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:landlord_dashboard' %}">Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:add_property' %}">Add Property</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:landlord_logout' %}">Logout ({{ user.username }})</a></li>
+                    {% else %}
+                        <!-- Not logged in -->
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:landlord_register' %}">Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:landlord_login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'manyumbavacant:landlord_start' %}">List Property (Legacy)</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <main class="container my-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="bg-light text-center py-3 mt-5">
+        <small>© {% now "Y" %} ManyumbaVacant – Find your home in Lodwar, Turkana.</small>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

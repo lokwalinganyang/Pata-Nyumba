@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: manyumbavacant
+    runtime: python
+    plan: free
+    region: ohio
+    buildCommand: ./build.sh
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: manyumbavacant-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: CLOUDINARY_CLOUD_NAME
+        value: "duhyohtyq"
+      - key: CLOUDINARY_API_KEY
+        value: "996447835644153"
+      - key: CLOUDINARY_API_SECRET
+        value: "8MFrFHGH1MVr2uC_OTo_xBaEwVI"
+
+databases:
+  - name: manyumbavacant-db
+    plan: free

@@ -27,6 +27,7 @@ class LandlordRegistrationForm(UserCreationForm):
         super().__init__(*args, **kwargs)
         for field_name in ['username', 'password1', 'password2']:
             self.fields[field_name].widget.attrs.update({'class': 'form-control'})
+        # Also add form-control class to name, phone, alt_phone, email already have it from widget definition
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -34,13 +35,26 @@ class LandlordRegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         if commit:
             user.save()
-            Landlord.objects.create(
-                user=user,
-                name=self.cleaned_data['name'],
-                phone=self.cleaned_data['phone'],
-                alt_phone=self.cleaned_data['alt_phone'],
-                is_verified=True
+            phone = self.cleaned_data['phone']
+            name = self.cleaned_data['name']
+            alt_phone = self.cleaned_data['alt_phone']
+            # Try to get existing landlord by phone, else create new
+            landlord, created = Landlord.objects.get_or_create(
+                phone=phone,
+                defaults={
+                    'user': user,
+                    'name': name,
+                    'alt_phone': alt_phone,
+                    'is_verified': True
+                }
             )
+            if not created:
+                # Update the existing landlord with the new user
+                landlord.user = user
+                landlord.name = name
+                landlord.alt_phone = alt_phone
+                landlord.is_verified = True
+                landlord.save()
         return user
 
 class PropertyForm(forms.ModelForm):
@@ -88,15 +102,14 @@ class PropertyForm(forms.ModelForm):
                 self.add_error('hourly_rate', 'Hourly rate is required for conference facilities.')
             if not cleaned_data.get('capacity_range'):
                 self.add_error('capacity_range', 'Capacity range is required for conference facilities.')
-            # Defaults for non-conference fields (ignore them)
-            # Set dummy values for fields that are not applicable but the model expects
+            # Set dummy values for fields not applicable
             cleaned_data['monthly_rent'] = None
             cleaned_data['nightly_rate'] = None
             cleaned_data['house_type'] = ''
             cleaned_data['total_units'] = 1
             cleaned_data['min_lease_months'] = 6
 
-        # For any type, ensure total_units and min_lease_months have defaults
+        # Ensure total_units and min_lease_months have defaults for all types
         if not cleaned_data.get('total_units'):
             cleaned_data['total_units'] = 1
         if not cleaned_data.get('min_lease_months'):

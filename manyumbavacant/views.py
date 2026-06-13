@@ -86,6 +86,8 @@ def landlord_start(request):
             request.session['landlord_id'] = landlord.id
             messages.success(request, "Phone verified! Now list your property.")
             return redirect('manyumbavacant:add_property')
+        else:
+            messages.error(request, "Invalid form. Please check your input.")
     else:
         form = LandlordForm()
     return render(request, 'manyumbavacant/landlord_start.html', {'form': form})
@@ -95,14 +97,19 @@ def landlord_register(request):
     if request.method == 'POST':
         form = LandlordRegistrationForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.is_staff = False
-            user.is_superuser = False
-            user.save()
-            # The form's save method already creates the Landlord profile
-            login(request, user)
-            messages.success(request, f"Welcome {user.username}! You are now registered.")
-            return redirect('manyumbavacant:landlord_dashboard')
+            try:
+                # The form's save() creates the User and Landlord (linking if phone exists)
+                user = form.save()
+                login(request, user)
+                messages.success(request, f"Welcome {user.username}! You are now registered.")
+                return redirect('manyumbavacant:landlord_dashboard')
+            except Exception as e:
+                messages.error(request, f"Registration failed: {str(e)}")
+        else:
+            # Show form errors to the user
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = LandlordRegistrationForm()
     return render(request, 'manyumbavacant/landlord_register.html', {'form': form})
@@ -165,6 +172,7 @@ def add_property(request):
         'landmarks': Location.objects.filter(location_type='landmark', is_active=True),
     }
     return render(request, 'manyumbavacant/add_property.html', context)
+
 
 def property_thanks(request, prop_id):
     prop = get_object_or_404(Property, id=prop_id)

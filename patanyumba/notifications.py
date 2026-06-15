@@ -3,9 +3,16 @@ from django.conf import settings
 
 def send_email_notification(subject, message, recipient_list=None):
     if not recipient_list:
-        recipient_list = [settings.ADMIN_EMAIL] if hasattr(settings, 'ADMIN_EMAIL') else ['admin@manyumbavacant.com']
+        # Use ADMIN_EMAIL from settings, fallback to a generic address
+        recipient_list = [getattr(settings, 'ADMIN_EMAIL', 'admin@patanyumba.com')]
     try:
-        send_mail(subject=subject, message=message, from_email=settings.EMAIL_HOST_USER, recipient_list=recipient_list, fail_silently=False)
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=recipient_list,
+            fail_silently=False
+        )
         return True
     except Exception as e:
         print(f"Email failed: {e}")

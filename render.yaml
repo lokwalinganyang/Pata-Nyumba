@@ -18,9 +18,9 @@ services:
       - key: CLOUDINARY_CLOUD_NAME
         value: "duhyohtyq"
       - key: CLOUDINARY_API_KEY
-        value: "996447835644153"
+        value: "462945843189545"
       - key: CLOUDINARY_API_SECRET
-        value: "8MFrFHGH1MVr2uC_OTo_xBaEwVI"
+        value: "eaUUwyVEEzd-ta1rGWTXD2HOhro"
 
 databases:
   - name: manyumbavacant-db

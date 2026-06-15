@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Browse by Location - Patanyumba{% endblock %}
+{% block content %}
+<h2>Browse Properties by Area</h2><div class="row">{% for village in villages %}<div class="col-md-4 mb-3"><div class="card {% if village.has_properties %}border-primary{% else %}border-secondary{% endif %}"><div class="card-body"><h5>{{ village.name }}</h5>{% if village.has_properties %}<p class="text-success">{{ village.count }} properties</p><a href="{% url 'patanyumba:search' %}?neighbourhood={{ village.name|urlencode }}" class="btn btn-sm btn-primary">View</a>{% else %}<p class="text-muted">No properties yet</p>{% endif %}</div></div></div>{% endfor %}</div>
+{% endblock %}

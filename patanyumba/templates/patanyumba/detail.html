@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}{{ property.title }} - ManyumbaVacant{% endblock %}
+{% block title %}{{ property.title }} - PataNyumba{% endblock %}
 {% block content %}
 <div class="row">
     <div class="col-md-7">{% if property.image1 %}<img src="{{ property.image1.url }}" class="img-fluid rounded">{% endif %}</div>
@@ -7,6 +7,6 @@
     <h5>Features</h5><ul>{% if property.has_tiles %}<li>Tiles</li>{% endif %}{% if property.has_water %}<li>Water</li>{% endif %}{% if property.has_internet %}<li>Internet</li>{% endif %}</ul>
     <p>{{ property.description|linebreaks }}</p><hr>
     {% if show_contact %}<div class="alert alert-success"><strong>{{ property.landlord.name }}</strong><br>📞 {{ landlord_phone }}</div>{% else %}<a href="?reveal=1" class="btn btn-success w-100">Show Contact Number</a>{% endif %}
-    <a href="{% url 'manyumbavacant:search' %}" class="btn btn-outline-primary w-100 mt-2">Back to Search</a></div>
+    <a href="{% url 'patanyumba:search' %}" class="btn btn-outline-primary w-100 mt-2">Back to Search</a></div>
 </div>
 {% endblock %}

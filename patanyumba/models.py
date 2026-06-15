@@ -129,10 +129,11 @@ class Property(models.Model):
     catering_available = models.BooleanField(default=False)
     conference_notes = models.TextField(blank=True)
 
-    image1 = models.ImageField(upload_to='manyumbavacant/', blank=True)
-    image2 = models.ImageField(upload_to='manyumbavacant/', blank=True)
-    image3 = models.ImageField(upload_to='manyumbavacant/', blank=True)
-    image4 = models.ImageField(upload_to='manyumbavacant/', blank=True)
+    # --- UPDATED upload_to paths to 'patanyumba/' ---
+    image1 = models.ImageField(upload_to='patanyumba/', blank=True)
+    image2 = models.ImageField(upload_to='patanyumba/', blank=True)
+    image3 = models.ImageField(upload_to='patanyumba/', blank=True)
+    image4 = models.ImageField(upload_to='patanyumba/', blank=True)
 
     listing_tier = models.CharField(max_length=20, choices=LISTING_TIERS, default='free')
     tier_expiry = models.DateTimeField(null=True, blank=True)

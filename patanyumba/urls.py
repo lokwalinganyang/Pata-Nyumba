@@ -1,19 +1,19 @@
 from django.urls import path
 from . import views
 
-app_name = 'manyumbavacant'
+app_name = 'patanyumba'   # ← changed from 'manyumbavacant'
 urlpatterns = [
     # Public pages
     path('', views.home, name='home'),
     path('search/', views.search_properties, name='search'),
     path('locations/', views.browse_by_location, name='browse_locations'),
     
-    # Landlord Authentication (new)
+    # Landlord Authentication
     path('landlord/register/', views.landlord_register, name='landlord_register'),
     path('landlord/login/', views.landlord_login, name='landlord_login'),
     path('landlord/logout/', views.landlord_logout, name='landlord_logout'),
     
-    # Legacy session‑based registration (optional – keep for existing links)
+    # Legacy session‑based registration (optional)
     path('landlord/start/', views.landlord_start, name='landlord_start'),
     
     # Property management

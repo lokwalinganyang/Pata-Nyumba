@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Search Properties - ManyumbaVacant{% endblock %}
+{% block title %}Search Properties - PataNyumba{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -12,7 +12,7 @@
                 <i class="bi bi-funnel"></i> Filter Properties
             </div>
             <div class="card-body">
-                <form method="get" action="{% url 'manyumbavacant:search' %}" id="filterForm">
+                <form method="get" action="{% url 'patanyumba:search' %}" id="filterForm">
                     <!-- Property type (always visible) -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Property Type</label>

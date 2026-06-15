@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Landlord Dashboard - Patanyumba{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-3"><div class="card"><div class="card-header bg-primary text-white">Welcome, {{ landlord.name }}</div><div class="card-body"><p><i class="bi bi-telephone"></i> {{ landlord.phone }}</p><a href="{% url 'patanyumba:add_property' %}" class="btn btn-success w-100">+ Add New Property</a></div></div></div>
+    <div class="col-md-9"><h2>My Properties</h2><div class="row mb-3"><div class="col-md-3"><div class="card text-center bg-info text-white"><div class="card-body"><h3>{{ total_properties }}</h3><p>Total</p></div></div></div>
+        <div class="col-md-3"><div class="card text-center bg-success text-white"><div class="card-body"><h3>{{ approved_properties }}</h3><p>Approved</p></div></div></div>
+        <div class="col-md-3"><div class="card text-center bg-warning"><div class="card-body"><h3>{{ pending_properties }}</h3><p>Pending</p></div></div></div>
+        <div class="col-md-3"><div class="card text-center bg-secondary text-white"><div class="card-body"><h3>{{ active_properties }}</h3><p>Active</p></div></div></div>
+    </div>
+    <div class="card"><div class="card-body"><div class="table-responsive"><table class="table table-hover"><thead><tr><th>Title</th><th>Type</th><th>Price</th><th>Status</th><th>Actions</th></tr></thead><tbody>{% for prop in properties %}<tr><td>{{ prop.title }}</td><td>{{ prop.get_property_type_display }}</td><td>{% if prop.property_type == 'rent' or prop.property_type == 'lease' %}KES {{ prop.monthly_rent }}/month{% else %}KES {{ prop.nightly_rate }}/night{% endif %}</td><td>{% if prop.is_approved %}<span class="badge bg-success">Approved</span>{% else %}<span class="badge bg-warning">Pending</span>{% endif %}</td><td><a href="{% url 'patanyumba:property_detail' prop.id %}" class="btn btn-sm btn-outline-primary">View</a> <a href="{% url 'patanyumba:landlord_edit_property' prop.id %}" class="btn btn-sm btn-outline-secondary">Edit</a> <a href="{% url 'patanyumba:landlord_toggle_active' prop.id %}" class="btn btn-sm btn-outline-warning">{% if prop.is_active %}Deactivate{% else %}Activate{% endif %}</a> <a href="{% url 'patanyumba:landlord_delete_property' prop.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete?')">Delete</a></td></tr>{% empty %}<tr><td colspan="5" class="text-center">No properties yet. <a href="{% url 'patanyumba:add_property' %}">Add your first property</a></td></tr>{% endfor %}</tbody></table></div></div></div></div>
+</div>
+{% endblock %}

@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'cloudinary_storage',
     'cloudinary',
-    'manyumbavacant',
+    'patanyumba',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +48,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'manyumbavacant.context_processors.ads_context',
+                'patanyumba.context_processors.ads_context',
             ],
         },
     },
@@ -77,23 +77,18 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static'] if (BASE_DIR / 'static').exists() else []
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Media files (CRITICAL – this was missing)
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Cloudinary (for production on Render)
+# Cloudinary
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME', 'duhyohtyq'),
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY', '996447835644153'),
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET', '8MFrFHGH1MVr2uC_OTo_xBaEwVI'),
 }
+
 LOGIN_URL = '/admin/login/'
 CONTACT_REVEAL_LIMIT = 5
 CONTACT_REVEAL_WINDOW = 86400
-# Security
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://*.onrender.com']
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True

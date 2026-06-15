@@ -58,7 +58,7 @@ TEMPLATES = [
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
-            default='postgresql://user:pass@localhost:5432/db',
+            default='postgresql://manyumbavacant_db_user:vcpVjskcLW6dvPZ9N189JAjkWoV9Zwmx@dpg-d8lugi6q1p3s739su01g-a.oregon-postgres.render.com/manyumbavacant_db',
             conn_max_age=600,
             ssl_require=True
         )
